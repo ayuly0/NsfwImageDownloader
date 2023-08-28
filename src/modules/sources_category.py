@@ -1,4 +1,4 @@
-class SourcesCagetory:
+class SourcesCategory:
 	
 	def sources(self):
 		return ["hmtai", "nekos", "nekobot", "neko-love"]

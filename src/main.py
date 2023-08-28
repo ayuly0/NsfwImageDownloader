@@ -6,10 +6,10 @@ downloader = Downloader()
 setup = Setup()
 
 setup.create_folder_struct()
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 def main():
-	loop = asyncio.get_event_loop()
-	results = loop.run_until_complete(downloader.download_async("hmtai", "yuri", 10))
+	results = asyncio.run(downloader.download_async("hmtai", "uniform"))
 	print('\n'.join(results))
 
 	# downloader.download_while_get_link("hmtai", "yuri", "image/yuri")

@@ -1,6 +1,8 @@
+__import__('sys').path.append('../')
+
 import os
 import uuid
-import hmtai
+from lib import hmtai
 import requests
 import asyncio
 import aiohttp
@@ -9,27 +11,31 @@ import concurrent.futures
 from tqdm import trange
 from urllib.parse import urlparse, unquote
 from multiprocessing.pool import ThreadPool
-from .sources_cagetory import SourcesCagetory
+from .sources_category import SourcesCategory
 
 class Downloader:
 	def __init__(self):
 		self.h3ntai_links = []
 		self.sem = asyncio.Semaphore(2)
 
-	def get_link(self, source: str, cagetory: str) -> None:
+	def get_link(self, source: str, category: str) -> None:
 		link = ''
 
 		with concurrent.futures.ThreadPoolExecutor() as executor:
-			future = executor.submit(hmtai.get, source, cagetory)
+			future = executor.submit(hmtai.get, source, category)
 			link = future.result()
+
+		print(f"[+] Found {link}")
 
 		self.h3ntai_links.append(link)
 
-	def get_image_links(self, source: str, cagetory: str, amount: int = 50) -> None:
+	async def get_image_links(self, source: str, category: str, amount: int = 50) -> None:
 		self.h3ntai_links = []
 	  
-		for i in range(amount):
-			self.get_link(source, cagetory)
+		# for i in range(amount):
+		# 	self.get_link(source, category)
+
+		self.h3ntai_links = await hmtai.get(source, category, amount)
 
 	# Download Functions
 
@@ -47,33 +53,39 @@ class Downloader:
 		except Exception as ex:
 			print("Exception in download_file()", ex)
 
-	async def download_url_async(self, url, session, source, cagetory) -> str:
+	async def download_url_async(self, url, session, source, category) -> str:
 		size = self.get_lenght_file_url(url)
 		ext = self.get_ext_from_url(url)
-		file_name = f"image/{self.source_filter(source, cagetory)}/{cagetory}/{uuid.uuid4().hex}{ext}"
-		print(f"[+] Downloading {url}")
-		async with async_timeout.timeout(240):
-			async with session.get(url) as response:
-				with open(file_name, "wb") as fd:
-					async for data in response.content.iter_chunked(1024):
-						fd.write(data)
+		file_name = f"image/{self.source_filter(source, category)}/{category}/{uuid.uuid4().hex}{ext}"
+		print(f"[+] Downloading {unquote(url)}")
+		try:
+			async with async_timeout.timeout(360):
+				async with session.get(url) as response:
+					with open(file_name, "wb") as fd:
+						async for data in response.content.iter_chunked(1024):
+							fd.write(data)		
+		except Exception as ex:
+			return '[+] Failed downloaded ' + file_name + f" [{self.format_size(size, 'mb')}]"
+
 		return '[+] Successfully downloaded ' + file_name + f" [{self.format_size(size, 'mb')}]"
 
 	# Download Mode
 
-	async def download_async(self, source: str, cagetory: str, amount: int = 50):
+	async def download_async(self, source: str, category: str, amount: int = 50):
 		print("[+] Starting get links...")
-		self.get_image_links(source, cagetory, amount)
+		await self.get_image_links(source, category, amount)
+
+		print('\n------ Downloader ------\n')
 
 		async with aiohttp.ClientSession() as session:
-			tasks = [self.download_url_async(url, session, source, cagetory) for url in self.h3ntai_links]
+			tasks = [self.download_url_async(url, session, source, category) for url in self.h3ntai_links]
 			return await asyncio.gather(*tasks)
 
-	def download_while_get_link(self, source: str, cagetory: str, amount: int = 50) -> None:
+	def download_while_get_link(self, source: str, category: str, amount: int = 50) -> None:
 		with trange(amount, postfix = [{'value': 0}], bar_format = "{percentage:.0f}%|{bar}| {postfix[0][value]}/{total} {desc}") as t:
 			for i in t:
 				with concurrent.futures.ThreadPoolExecutor() as executor:
-					link = hmtai.get(source, cagetory)
+					link = hmtai.get(source, category)
 					extension = self.get_ext_from_url(link)
 					dir_name = os.path.dirname(save_path)
 					_, file_name = os.path.split(save_path)
@@ -108,29 +120,29 @@ class Downloader:
 		size = size / 1024 ** exponents_map[unit]
 		return f"{round(size, 2)} {unit.upper()}"
 
-	def source_filter(self, source, cagetory):
-		sources_cagetory = SourcesCagetory()
+	def source_filter(self, source, category):
+		sources_category = SourcesCategory()
 
 		if source == "hmtai":
-			if cagetory in sources_cagetory.hmtai_sfw():
+			if category in sources_category.hmtai_sfw():
 				return "hmtai-sfw"
-			elif cagetory in sources_cagetory.hmtai_nsfw():
+			elif category in sources_category.hmtai_nsfw():
 				return "hmtai-nsfw"
 
 		elif source == "nekos":
-			if cagetory in sources_cagetory.nekos_sfw():
+			if category in sources_category.nekos_sfw():
 				return "nekos-sfw"
-			elif cagetory in sources_cagetory.nekos_nsfw():
+			elif category in sources_category.nekos_nsfw():
 				return "nekos-nsfw"
 		elif source == "nekobot":
-			if cagetory in sources_cagetory.neko_bot_sfw():
+			if category in sources_category.neko_bot_sfw():
 				return "neko-bot-sfw"
-			elif cagetory in sources_cagetory.neko_bot_nsfw():
+			elif category in sources_category.neko_bot_nsfw():
 				return "neko-bot-nsfw"
 		elif source == "neko-love":
-			if cagetory in sources_cagetory.neko_love_sfw():
+			if category in sources_category.neko_love_sfw():
 				return "neko-love-sfw"
-			elif cagetory in sources_cagetory.neko_love_nsfw():
+			elif category in sources_category.neko_love_nsfw():
 				return "neko-love-nsfw"
 
 
