@@ -7,51 +7,17 @@ import requests
 import asyncio
 import aiohttp
 import async_timeout
-import concurrent.futures
-from tqdm import trange
 from urllib.parse import urlparse, unquote
-from multiprocessing.pool import ThreadPool
 from .sources_category import SourcesCategory
 
 class Downloader:
 	def __init__(self):
 		self.h3ntai_links = []
-		self.sem = asyncio.Semaphore(2)
 
-	def get_link(self, source: str, category: str) -> None:
-		link = ''
-
-		with concurrent.futures.ThreadPoolExecutor() as executor:
-			future = executor.submit(hmtai.get, source, category)
-			link = future.result()
-
-		print(f"[+] Found {link}")
-
-		self.h3ntai_links.append(link)
-
-	async def get_image_links(self, source: str, category: str, amount: int = 50) -> None:
-		self.h3ntai_links = []
-	  
-		# for i in range(amount):
-		# 	self.get_link(source, category)
-
+	async def get_image_links(self, source: str, category: str, amount: int = 50) -> None:	
 		self.h3ntai_links = await hmtai.get(source, category, amount)
 
 	# Download Functions
-
-	def download_file(self, url: str, save_path: str) -> None:
-		try:
-
-			res = requests.get(url)
-	
-			with open(save_path, 'wb') as f:
-				for chunk in res.iter_content(chunk_size = 1024):
-					if not chunk:
-						continue
-					f.write(chunk)
-
-		except Exception as ex:
-			print("Exception in download_file()", ex)
 
 	async def download_url_async(self, url, session, source, category) -> str:
 		size = self.get_lenght_file_url(url)
@@ -72,7 +38,8 @@ class Downloader:
 	# Download Mode
 
 	async def download_async(self, source: str, category: str, amount: int = 50):
-		print("[+] Starting get links...")
+		print("\n------ Searching ------\n")
+
 		await self.get_image_links(source, category, amount)
 
 		print('\n------ Downloader ------\n')
@@ -80,27 +47,6 @@ class Downloader:
 		async with aiohttp.ClientSession() as session:
 			tasks = [self.download_url_async(url, session, source, category) for url in self.h3ntai_links]
 			return await asyncio.gather(*tasks)
-
-	def download_while_get_link(self, source: str, category: str, amount: int = 50) -> None:
-		with trange(amount, postfix = [{'value': 0}], bar_format = "{percentage:.0f}%|{bar}| {postfix[0][value]}/{total} {desc}") as t:
-			for i in t:
-				with concurrent.futures.ThreadPoolExecutor() as executor:
-					link = hmtai.get(source, category)
-					extension = self.get_ext_from_url(link)
-					dir_name = os.path.dirname(save_path)
-					_, file_name = os.path.split(save_path)
-
-					t.set_description(f'Found {link}')
-
-					save_path_new = f'{dir_name}/{file_name}-{uuid.uuid4().hex}{extension}'
-
-					t.set_description(f'Starting download...')
-
-					executor.submit(self.download_file, link, save_path_new)
-
-					t.set_description(f'{save_path_new}')
-					t.postfix[0]["value"] = i + 1
-					t.update()
 
 	# Utils
 	def get_ext_from_url(self, url) -> str:
@@ -132,18 +78,11 @@ class Downloader:
 		elif source == "nekos":
 			if category in sources_category.nekos_sfw():
 				return "nekos-sfw"
-			elif category in sources_category.nekos_nsfw():
-				return "nekos-nsfw"
-		elif source == "nekobot":
-			if category in sources_category.neko_bot_sfw():
-				return "neko-bot-sfw"
-			elif category in sources_category.neko_bot_nsfw():
-				return "neko-bot-nsfw"
-		elif source == "neko-love":
-			if category in sources_category.neko_love_sfw():
-				return "neko-love-sfw"
-			elif category in sources_category.neko_love_nsfw():
-				return "neko-love-nsfw"
+		elif source == "nekosfun":
+			if category in sources_category.nekosfun_sfw():
+				return "nekosfun-sfw"
+			elif category in sources_category.nekosfun_nsfw():
+				return "nekosfun-nsfw"
 
 
 

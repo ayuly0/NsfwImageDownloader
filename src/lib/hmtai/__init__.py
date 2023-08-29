@@ -41,42 +41,27 @@ async def get(source = None, category = None, amount = 1):
 				return res
 		except Exception as e:
 			print(f"ERROR! Contact NickSaltFox#7273 (in discord) with this information!\nDetails: \n  Source: {source}\n Exception: {e}")
-	elif source == "nekobot":
-		try:
-			res = await hmfull.nekobot_async(category)
-			if res == 0:
-				raise CategoryNotFound(category)
-			else:
-				return res
-		except Exception as e:
-			print(f"ERROR! Contact NickSaltFox#7273 (in discord) with this information!\nDetails: \n  Source: {source}\n Exception: {e}")
+
 	elif source == "nekos":
 		try:
-			res = await hmfull.nekos_async(category)
+			res = await hmfull.nekos_async(category, amount)
 			if res == 0:
 				raise CategoryNotFound(category)
 			else:
 				return res
 		except Exception as e:
 			print(f"ERROR! Contact NickSaltFox#7273 (in discord) with this information!\nDetails: \n  Source: {source}\n Exception: {e}")
-	elif source == "freaker":
+
+	elif source == "nekosfun":
 		try:
-			res = hmfull.freaker(category)
+			res = await hmfull.nekosfun_async(category, amount)
 			if res == 0:
 				raise CategoryNotFound(category)
 			else:
 				return res
 		except Exception as e:
 			print(f"ERROR! Contact NickSaltFox#7273 (in discord) with this information!\nDetails: \n  Source: {source}\n Exception: {e}")
-	elif source == "nekolove":
-		try:
-			res = await hmfull.nekolove_async(category)
-			if res == 0:
-				raise CategoryNotFound(category)
-			else:
-				return res
-		except Exception as e:
-			print(f"ERROR! Contact NickSaltFox#7273 (in discord) with this information!\nDetails: \n  Source: {source}\n Exception: {e}")
+
 
 def useHM(version = None, category = None):
 	return get("hmtai",f"{category}")

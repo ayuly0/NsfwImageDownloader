@@ -25,22 +25,10 @@ class Setup:
 			if not os.path.exists(f"image/nekos-sfw/{nekos_sfw}"):
 				os.mkdir(f"image/nekos-sfw/{nekos_sfw}")
 
-		for nekos_nsfw in self.sources_category.nekos_nsfw():
-			if not os.path.exists(f"image/nekos-nsfw/{nekos_nsfw}"):
-				os.mkdir(f"image/nekos-nsfw/{nekos_nsfw}")
-
-		for neko_bot_sfw in self.sources_category.neko_bot_sfw():
-			if not os.path.exists(f"image/neko-bot-sfw/{neko_bot_sfw}"):
-				os.mkdir(f"image/neko-bot-sfw/{neko_bot_sfw}")
-
-		for neko_bot_nsfw in self.sources_category.neko_bot_nsfw():
-			if not os.path.exists(f"image/neko-bot-nsfw/{neko_bot_nsfw}"):
-				os.mkdir(f"image/neko-bot-nsfw/{neko_bot_nsfw}")
-
-		for neko_love_sfw in self.sources_category.neko_love_sfw():
-			if not os.path.exists(f"image/neko-love-sfw/{neko_love_sfw}"):
-				os.mkdir(f"image/neko-love-sfw/{neko_love_sfw}")
-
-		for neko_love_nsfw in self.sources_category.neko_love_nsfw():
-			if not os.path.exists(f"image/neko-love-nsfw/{neko_love_nsfw}"):
-				os.mkdir(f"image/neko-love-nsfw/{neko_love_nsfw}")
+		for nekosfun_sfw in self.sources_category.nekosfun_sfw():
+			if not os.path.exists(f"image/nekosfun-sfw/{nekosfun_sfw}"):
+				os.mkdir(f"image/nekosfun-sfw/{nekosfun_sfw}")
+		
+		for nekosfun_nsfw in self.sources_category.nekosfun_nsfw():
+			if not os.path.exists(f"image/nekosfun-nsfw/{nekosfun_nsfw}"):
+				os.mkdir(f"image/nekosfun-nsfw/{nekosfun_nsfw}")

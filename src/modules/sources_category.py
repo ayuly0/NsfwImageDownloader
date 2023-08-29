@@ -1,10 +1,10 @@
 class SourcesCategory:
 	
 	def sources(self):
-		return ["hmtai", "nekos", "nekobot", "neko-love"]
+		return ["hmtai", "nekos", "nekobot", "nekosfun"]
 
 	def sources_folder(self):
-		return ["hmtai-sfw", 'hmtai-nsfw', "nekos-sfw", "nekos-nsfw", "neko-bot-sfw", "neko-bot-nsfw", "neko-love-sfw", "neko-love-nsfw"]
+		return ["hmtai-sfw", 'hmtai-nsfw', "nekos-sfw", "nekosfun-sfw", "nekosfun-nsfw"]
 
 	def hmtai_sfw(self):
 		return ["wave","tea","punch","poke","pat","kiss","feed","hug","cuddle","cry","slap","lick","bite","dance","boop","sleep","like","kill","nosebleed","threaten","tickle","depression","jahy_arts","neko_arts","coffee_arts","wallpaper","mobileWallpaper"]
@@ -13,21 +13,11 @@ class SourcesCategory:
 		return ["anal","ass","bdsm","cum","classic","creampie","manga","femdom","hentai","incest","masturbation","public","ero","orgy","elves","yuri","pantsu","glasses","cuckold","blowjob","boobjob","footjob","handjob","boobs","thighs","pussy","ahegao","uniform","gangbang","tentacles","gif","nsfwNeko","nsfwMobileWallpaper","zettaiRyouiki"]
 
 	def nekos_sfw(self):
-		return ["pat","hug","kiss","cry","slap","smug","neko","waifu","cuddle","feed","foxgirl"]
+		return ["wallpaper","ngif","tickle","feed","gecg","gasm","slap","avatar","lizard","waifu","pat","8ball","kiss","neko","spank","cuddle","fox_girl","hug","smug","goose","woof"]
+	
+	def nekosfun_sfw(self):
+		return ["kiss","lick","hug","baka","cry","poke","smug","slap","tickle","pat","laugh","feed","cuddle"]
 
-	def nekos_nsfw(self):
-		return ["nekogif"]
-
-	def neko_bot_sfw(self):
-		return ["kanna","neko","holo","kemonomimi","coffee","gah"]
-
-	def neko_bot_nsfw(self):
-		return ["hentai","hass","boobs","paizuri","yuri","thigh","lewdneko","midriff","kitsune","tentacle","anal","hanal","hneko","wallpaper"]
-
-	def neko_love_sfw(self):
-		return ["pat","hug","kiss","cry","slap","smug","punch","neko","kitsune","waifu"]
-
-	def neko_love_nsfw(self):
-		return ["nekolewd"]
-
+	def nekosfun_nsfw(self):
+		return ["4K","ass","blowjob","boobs","cum","feet","hentai","wallpapers","spank","gasm","lesbian","lewd","pussy"] 
 
