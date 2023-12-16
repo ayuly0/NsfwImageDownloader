@@ -1,7 +1,9 @@
 from modules.downloader import Downloader
 from modules.setup import Setup
 from modules.menu import Menu
+from modules.sources_category import SourcesCategory
 import asyncio
+import os
 
 downloader = Downloader()
 setup = Setup()
@@ -40,12 +42,19 @@ async def main():
 	print('\n------ Results ------\n')
 	print('\n'.join(results))
 
+	print("\n")
+
+	folder_image_path = os.path.abspath(f"image/{SourcesCategory.source_filter(source[0], category)}/{category}")
+	open_folder = menu.confirm(f"Do you want to open folder '{folder_image_path}'", True)
+
+	os.startfile(folder_image_path) if open_folder else None
+
+
 while True:
 	__import__('os').system('cls')
 	
 	asyncio.run(main())
 
-	print('\n')
 	again = menu.confirm("Do you want to use agian?", True)
 	if not again:
 		break

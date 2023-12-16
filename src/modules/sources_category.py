@@ -20,4 +20,23 @@ class SourcesCategory:
 
 	def nekosfun_nsfw(self):
 		return ["4K","ass","blowjob","boobs","cum","feet","hentai","wallpapers","spank","gasm","lesbian","lewd","pussy"] 
+	
+	@staticmethod
+	def source_filter(source, category):
+		sources_category = SourcesCategory()
+
+		if source == "hmtai":
+			if category in sources_category.hmtai_sfw():
+				return "hmtai-sfw"
+			elif category in sources_category.hmtai_nsfw():
+				return "hmtai-nsfw"
+
+		elif source == "nekos":
+			if category in sources_category.nekos_sfw():
+				return "nekos-sfw"
+		elif source == "nekosfun":
+			if category in sources_category.nekosfun_sfw():
+				return "nekosfun-sfw"
+			elif category in sources_category.nekosfun_nsfw():
+				return "nekosfun-nsfw"
 
